@@ -49,12 +49,32 @@
     UIGravityBehavior *gravityBehavior = [[UIGravityBehavior alloc] initWithItems:@[self.blurView]];
     [self.animator addBehavior:gravityBehavior];
 
-    [self fetchPhotoWithCompletionHandler:^(CGImageRef imageRef) {
-        self.backgroundView.image = [[UIImage alloc] initWithCGImage:imageRef];
+    [self fetchPhotoWithCompletionHandler:^(ALAsset *asset) {
+        ALAssetRepresentation *representation = [asset defaultRepresentation];
+        CGImageRef imageRef = [representation fullResolutionImage];
+        self.backgroundView.image = [[UIImage alloc] initWithCGImage:imageRef scale:representation.scale orientation:representation.orientation];
     }];
 }
 
-- (void)fetchPhotoWithCompletionHandler:(void (^)(CGImageRef))handler;
+- (IBAction)didPan:(UIPanGestureRecognizer *)sender
+{
+    CGPoint translation = [sender translationInView:self.view];
+
+    CGRect blurViewFrame = self.blurView.frame;
+    blurViewFrame.size.height += translation.y;
+
+    if (blurViewFrame.size.height > CGRectGetHeight(self.view.bounds)) {
+        blurViewFrame.size.height = CGRectGetHeight(self.view.bounds);
+    } else if (blurViewFrame.size.height < 0) {
+        blurViewFrame.size.height = 0;
+    }
+
+    self.blurView.frame = blurViewFrame;
+
+    [sender setTranslation:CGPointZero inView:self.view];
+}
+
+- (void)fetchPhotoWithCompletionHandler:(void (^)(ALAsset *))handler;
 {
     [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
         if (!group)
@@ -62,15 +82,15 @@
 
         *stop = YES;
 
-        [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stopGroup) {
             if (!result)
                 return;
 
-            *stop = YES;
+            *stopGroup = YES;
 
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 if (handler)
-                    handler(result.defaultRepresentation.fullResolutionImage);
+                    handler(result);
             }];
         }];
     } failureBlock:nil];
@@ -82,12 +102,12 @@
     dispatch_once(&onceToken, ^{
         CGRect bounds = self.view.bounds;
 
-        UIImage *viewImage = [KVRenderer renderImageWithSize:bounds.size transparency:NO drawingBlock:^{
-            [self.view drawViewHierarchyInRect:bounds];
+        UIImage *viewImage = [KVRenderer renderImageWithSize:CGSizeMake(320, 568) transparency:NO drawingBlock:^{
+            [self.backgroundView drawViewHierarchyInRect:bounds];
         }];
 
         UIImage *blurredImage = [viewImage applyLightEffect];
-        self.blurView.image = [[UIImage alloc] initWithCGImage:blurredImage.CGImage];
+        self.blurView.image = blurredImage;
     });
 }
 

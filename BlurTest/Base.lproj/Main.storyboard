@@ -8,15 +8,15 @@
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="BTViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="top" id="kh9-bI-dsS">
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="0L2-Rd-vcn">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="0L2-Rd-vcn">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kJ0-C8-4e7">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kJ0-C8-4e7">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
@@ -25,7 +25,7 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="M8B-eZ-V9I" appends="YES" id="d3U-HX-Zf0"/>
-                            <outletCollection property="gestureRecognizers" destination="MJI-9N-k2i" appends="YES" id="36s-ns-RDc"/>
+                            <outletCollection property="gestureRecognizers" destination="nD7-3g-DdN" appends="YES" id="v2H-Rq-9MV"/>
                         </connections>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -40,9 +40,9 @@
                         <action selector="applyBlur:" destination="vXZ-lx-hvc" id="59R-ZO-TiB"/>
                     </connections>
                 </tapGestureRecognizer>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="MJI-9N-k2i">
+                <panGestureRecognizer minimumNumberOfTouches="1" id="nD7-3g-DdN">
                     <connections>
-                        <action selector="viewDidPan:" destination="vXZ-lx-hvc" id="rPo-Uu-vYT"/>
+                        <action selector="didPan:" destination="vXZ-lx-hvc" id="lXb-dV-brD"/>
                     </connections>
                 </panGestureRecognizer>
             </objects>
@@ -53,7 +53,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/BTViewController.h"/>
             <relationships>
                 <relationship kind="action" name="applyBlur:"/>
-                <relationship kind="action" name="viewDidPan:" candidateClass="UIPanGestureRecognizer"/>
+                <relationship kind="action" name="didPan:" candidateClass="UIPanGestureRecognizer"/>
                 <relationship kind="outlet" name="backgroundView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="blurView" candidateClass="UIImageView"/>
             </relationships>
